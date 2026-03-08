@@ -1,28 +1,20 @@
-from flask import Flask, render_template, request, redirect
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, jsonify
+from fitness_generator import generate_plan
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret123'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 
-db = SQLAlchemy(app)
+@app.route("/")
+def home():
+    return open("index.html").read()
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100))
-    password = db.Column(db.String(100))
+@app.route("/generate", methods=["POST"])
+def generate():
+    data = request.json
+    goal = data.get("goal")
 
-@app.route("/register", methods=["GET","POST"])
-def register():
+    plan = generate_plan(goal)
 
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+    return jsonify({"plan": plan})
 
-        user = User(username=username,password=password)
-        db.session.add(user)
-        db.session.commit()
-
-        return "User created!"
-
-    return render_template("register.html")
+if __name__ == "__main__":
+    app.run(debug=True)
