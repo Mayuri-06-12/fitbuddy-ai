@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Fitness Planner</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1>💪 AI Fitness Planner</h1>
+
+<h2>Enter Your Goal</h2>
+
+<input id="goal" placeholder="weight loss / muscle gain">
+<button onclick="getPlan()">Generate Plan</button>
+
+<h2>BMI Calculator</h2>
+
+<input id="weight" placeholder="Weight (kg)">
+<input id="height" placeholder="Height (m)">
+<button onclick="getBMI()">Calculate BMI</button>
+
+<h3 id="bmiResult"></h3>
+
+<h2>Workout Plan</h2>
+<pre id="workout"></pre>
+
+<h2>Diet Plan</h2>
+<pre id="diet"></pre>
+
+<script>
+async function sendMessage(){
+
+let msg = document.getElementById("msg").value
+
+let res = await fetch("/chat",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:msg})
+})
+
+let data = await res.json()
+
+document.getElementById("chat").innerText += "\nAI: "+data.reply
+}
+
+</script>
+
+</body>
+</html>
